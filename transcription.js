@@ -1,42 +1,43 @@
-const axios = require('axios');
 const fs = require('fs');
-const FormData = require('form-data');
+const { SpeechClient } = require('@google-cloud/speech');
 const winston = require('winston');
-
 const path = require('path');
 const { config } = require('dotenv');
-config({ path: path.resolve(__dirname, '.env') });
+config({ path: path.resolve(__dirname, '..', '.env') });
 
+const speechClient = new SpeechClient();
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-const transcribeAudioWithOpenAI = async (audio_path) => {
+const transcribeAudio = async (audioFilePath) => {
     try {
-        const form = new FormData();
-        form.append('file', fs.createReadStream(audio_path));
-        form.append('model', 'whisper-1');
-        form.append('language', 'en');
-        const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', form, {
-            headers: {
-                'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                ...form.getHeaders()
-            }
-        });
+        const file = fs.readFileSync(audioFilePath);
+        const audioBytes = file.toString('base64');
 
-        if (response.status === 200) {
-            return response.data.text;
-        } else {
-            winston.error(`Failed to transcribe audio with status code: ${response.status}`);
-            winston.error(`Response data: ${JSON.stringify(response.data)}`);
-            return null;
-        }
+        const audio = {
+            content: audioBytes,
+        };
+
+        const config = {
+            encoding: 'LINEAR16',
+            sampleRateHertz: 48000,
+            languageCode: 'en-US',
+            audioChannelCount: 2,
+        };
+
+        const request = {
+            audio: audio,
+            config: config,
+        };
+
+        const [response] = await speechClient.recognize(request);
+        const transcription = response.results
+            .map(result => result.alternatives[0].transcript)
+            .join('\n');
+
+        return transcription;
     } catch (error) {
-        winston.error(`Error in transcribeAudioWithOpenAI: ${error}`);
-        if (error.response) {
-            winston.error(`Response data: ${JSON.stringify(error.response.data)}`);
-        }
+        winston.error(`Error in transcribeAudio: ${error}`);
         return null;
     }
 };
 
-module.exports = { transcribeAudioWithOpenAI };
+module.exports = transcribeAudio;

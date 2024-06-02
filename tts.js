@@ -1,18 +1,17 @@
 const axios = require('axios');
 const fs = require('fs');
 const winston = require('winston');
-
 const path = require('path');
 const { config } = require('dotenv');
 config({ path: path.resolve(__dirname, '.env') });
 
 const ELEVEN_LABS_API_KEY = process.env.ELEVEN_LABS_API_KEY;
-const ELEVENAI_VOICE_ID = process.env.ELEVENAI_VOICE_ID;
+const ELEVEN_LABS_VOICE_ID = process.env.ELEVEN_LABS_VOICE_ID;
 
 const textToSpeech = async (text, filename = 'tts.mp3') => {
     try {
         console.log(`Generating TTS for text: ${text}`);
-        const response = await axios.post(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVENAI_VOICE_ID}`, { text }, {
+        const response = await axios.post(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_LABS_VOICE_ID}`, { text }, {
             headers: { 'xi-api-key': ELEVEN_LABS_API_KEY },
             responseType: 'arraybuffer'
         });
@@ -39,4 +38,4 @@ const textToSpeech = async (text, filename = 'tts.mp3') => {
     }
 };
 
-module.exports = { textToSpeech };
+module.exports = textToSpeech;
