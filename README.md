@@ -23,7 +23,9 @@ Create a `.env` file in the project root with the following variables:
 After creating the `.env` file and installing dependencies, start the bot with:
 
 ```bash
-node index.js
+npm start
 ```
+
+This command runs `node index.js` internally to launch the bot.
 
 The bot will connect to Discord using the provided token and begin listening for voice channel events.
