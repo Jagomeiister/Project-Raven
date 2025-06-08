@@ -1,4 +1,4 @@
-const { joinVoiceChannel } = require('@discordjs/voice');
+const { joinVoiceChannel, VoiceConnectionStatus } = require('@discordjs/voice');
 
 module.exports = (client, logger) => async (message) => {
     if (message.mentions.has(client.user)) {
@@ -9,7 +9,7 @@ module.exports = (client, logger) => async (message) => {
                 adapterCreator: message.member.voice.channel.guild.voiceAdapterCreator,
             });
 
-            connection.on('ready', () => {
+            connection.on(VoiceConnectionStatus.Ready, () => {
                 logger.info('Connected to voice channel.');
                 message.reply('Joined your voice channel!');
             });
