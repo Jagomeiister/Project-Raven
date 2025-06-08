@@ -35,7 +35,7 @@ const sendWelcomeMessage = async (connection, user, logger, botConfig, client) =
 
     try {
         logger.info(`Generating TTS for text: ${greetingMessage}`);
-        await textToSpeech(greetingMessage, ttsFile);
+        await textToSpeech(greetingMessage, ttsFile, logger);
         logger.info(`TTS audio file created at: ${ttsFile}`);
 
         if (!fs.existsSync(ttsFile) || fs.statSync(ttsFile).size === 0) {

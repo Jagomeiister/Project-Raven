@@ -8,23 +8,33 @@ config({ path: path.resolve(__dirname, '.env') });
 const ELEVEN_LABS_API_KEY = process.env.ELEVEN_LABS_API_KEY;
 const ELEVEN_LABS_VOICE_ID = process.env.ELEVEN_LABS_VOICE_ID;
 
-const textToSpeech = async (text, filename = 'tts.mp3') => {
+const defaultLogger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'tts-service' },
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'bot.log' })
+    ]
+});
+
+const textToSpeech = async (text, filename = 'tts.mp3', logger = defaultLogger) => {
     try {
-        console.log(`Generating TTS for text: ${text}`);
+        logger.info(`Generating TTS for text: ${text}`);
         const response = await axios.post(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_LABS_VOICE_ID}`, { text }, {
             headers: { 'xi-api-key': ELEVEN_LABS_API_KEY },
             responseType: 'arraybuffer'
         });
 
         if (response.status === 200) {
-            console.log(`Writing TTS audio to file: ${filename}`);
+            logger.info(`Writing TTS audio to file: ${filename}`);
             await fs.writeFile(filename, Buffer.from(response.data));
             const stats = await fs.stat(filename);
-            console.log(`TTS file size: ${stats.size} bytes`);
+            logger.info(`TTS file size: ${stats.size} bytes`);
             if (stats.size === 0) {
                 winston.error('TTS file is empty.');
             } else {
-                console.log('TTS file created successfully.');
+                logger.info('TTS file created successfully.');
             }
         } else {
             winston.error(`Request failed with status code: ${response.status}`);
