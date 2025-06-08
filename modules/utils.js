@@ -1,13 +1,19 @@
-const fs = require('fs');
+const fs = require('fs/promises');
 const path = require('path');
 
-const loadBannedWords = (filePath) => {
+const loadBannedWords = async (filePath) => {
     let banned_words = [];
-    if (filePath && fs.existsSync(filePath)) {
-        banned_words = fs.readFileSync(filePath, 'utf-8')
-            .split('\n')
-            .map(word => word.trim().toLowerCase())
-            .filter(word => word.length > 0);
+    if (filePath) {
+        try {
+            await fs.access(filePath);
+            const data = await fs.readFile(filePath, 'utf-8');
+            banned_words = data
+                .split('\n')
+                .map(word => word.trim().toLowerCase())
+                .filter(word => word.length > 0);
+        } catch {
+            // file does not exist; return empty array
+        }
     }
     return banned_words;
 };

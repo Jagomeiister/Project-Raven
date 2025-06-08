@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs/promises');
 const { SpeechClient } = require('@google-cloud/speech');
 const winston = require('winston');
 const path = require('path');
@@ -9,7 +9,7 @@ const speechClient = new SpeechClient();
 
 const transcribeAudio = async (audioFilePath) => {
     try {
-        const file = fs.readFileSync(audioFilePath);
+        const file = await fs.readFile(audioFilePath);
         const audioBytes = file.toString('base64');
 
         const audio = {
