@@ -2,8 +2,8 @@ const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerSta
 const path = require('path');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
-const { textToSpeech } = require('../tts');
-const { transcribeAudio } = require('../transcription');
+const textToSpeech = require('../tts');
+const transcribeAudio = require('../transcription');
 
 module.exports = (client, logger, botConfig) => async (oldState, newState) => {
     const user = newState.member.user;
