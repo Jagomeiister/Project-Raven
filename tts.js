@@ -1,9 +1,6 @@
 const axios = require('axios');
 const fs = require('fs/promises');
 const winston = require('winston');
-const path = require('path');
-const { config } = require('dotenv');
-config({ path: path.resolve(__dirname, '.env') });
 
 const ELEVEN_LABS_API_KEY = process.env.ELEVEN_LABS_API_KEY;
 const ELEVEN_LABS_VOICE_ID = process.env.ELEVEN_LABS_VOICE_ID;
