@@ -1,5 +1,5 @@
 const axios = require('axios');
-const fs = require('fs');
+const fs = require('fs/promises');
 const winston = require('winston');
 const path = require('path');
 const { config } = require('dotenv');
@@ -18,8 +18,8 @@ const textToSpeech = async (text, filename = 'tts.mp3') => {
 
         if (response.status === 200) {
             console.log(`Writing TTS audio to file: ${filename}`);
-            fs.writeFileSync(filename, Buffer.from(response.data));
-            const stats = fs.statSync(filename);
+            await fs.writeFile(filename, Buffer.from(response.data));
+            const stats = await fs.stat(filename);
             console.log(`TTS file size: ${stats.size} bytes`);
             if (stats.size === 0) {
                 winston.error('TTS file is empty.');

@@ -3,15 +3,15 @@ const path = require('path');
 const { loadBannedWords, splitResponse } = require('../modules/utils');
 
 describe('loadBannedWords', () => {
-  test('returns empty array when file is missing', () => {
-    const words = loadBannedWords('nonexistent.txt');
+  test('returns empty array when file is missing', async () => {
+    const words = await loadBannedWords('nonexistent.txt');
     expect(words).toEqual([]);
   });
 
-  test('loads and trims words from file', () => {
+  test('loads and trims words from file', async () => {
     const tmp = path.join(__dirname, 'temp_badwords.txt');
     fs.writeFileSync(tmp, ' Foo \nBar\n\nbaz ');
-    const words = loadBannedWords(tmp);
+    const words = await loadBannedWords(tmp);
     fs.unlinkSync(tmp);
     expect(words).toEqual(['foo', 'bar', 'baz']);
   });
