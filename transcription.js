@@ -3,7 +3,7 @@ const { SpeechClient } = require('@google-cloud/speech');
 const winston = require('winston');
 const path = require('path');
 const { config } = require('dotenv');
-config({ path: path.resolve(__dirname, '..', '.env') });
+config({ path: path.resolve(__dirname, '.env') });
 
 const speechClient = new SpeechClient();
 
