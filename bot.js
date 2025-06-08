@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const { config } = require('dotenv');
 const winston = require('winston');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs/promises');
 const botConfig = require('./config.json');
 
 // Load environment variables
@@ -46,15 +46,16 @@ const handleVoiceStateUpdate = require('./modules/handleVoiceStateUpdate');
 const handleCommands = require('./commands/handleCommands');
 
 // Event listener for when the bot is ready
-client.once('ready', () => {
+client.once('ready', async () => {
     logger.info(`Logged in as ${client.user.tag}`);
     const audioDir = path.join(__dirname, 'audio');
 
-    if (fs.existsSync(audioDir)) {
-        fs.rmSync(audioDir, { recursive: true, force: true });
+    try {
+        await fs.rm(audioDir, { recursive: true, force: true });
+        await fs.mkdir(audioDir);
+    } catch (err) {
+        logger.error(`Error preparing audio directory: ${err.message}`);
     }
-
-    fs.mkdirSync(audioDir);
 });
 
 // Event listener for voice state updates
