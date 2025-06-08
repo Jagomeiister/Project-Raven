@@ -15,6 +15,23 @@ describe('loadBannedWords', () => {
     fs.unlinkSync(tmp);
     expect(words).toEqual(['foo', 'bar', 'baz']);
   });
+
+  test('handles comment lines and unusual whitespace', async () => {
+    const tmp = path.join(__dirname, 'temp_badwords_comments.txt');
+    fs.writeFileSync(
+      tmp,
+      '# comment\nfoo\n    # Another Comment\n   Bar  \n\tbaz\t\n'
+    );
+    const words = await loadBannedWords(tmp);
+    fs.unlinkSync(tmp);
+    expect(words).toEqual([
+      '# comment',
+      'foo',
+      '# another comment',
+      'bar',
+      'baz',
+    ]);
+  });
 });
 
 describe('splitResponse', () => {
@@ -27,5 +44,11 @@ describe('splitResponse', () => {
     const text = 'The quick brown fox jumps over the lazy dog';
     const parts = splitResponse(text, 10);
     expect(parts).toEqual(['The quick', 'brown fox', 'jumps over', 'the lazy', 'dog']);
+  });
+
+  test('splits strings with no spaces', () => {
+    const text = 'abcdefghijklmnopqrstuvwxyz';
+    const parts = splitResponse(text, 10);
+    expect(parts).toEqual(['abcdefghij', 'klmnopqrst', 'uvwxyz']);
   });
 });
