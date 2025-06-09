@@ -4,3 +4,5 @@ project-raven-425202-68f496c90052.json
 *.mp3
 /audio/
 transcription.txt
+
+bot.log
