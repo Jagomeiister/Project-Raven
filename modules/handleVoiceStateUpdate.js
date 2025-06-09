@@ -1,6 +1,7 @@
 const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus } = require('@discordjs/voice');
 const path = require('path');
 const fs = require('fs');
+const fsPromises = require('fs/promises');
 const ffmpeg = require('fluent-ffmpeg');
 const textToSpeech = require('../tts');
 const transcribeAudio = require('../transcription');
@@ -38,7 +39,13 @@ const sendWelcomeMessage = async (connection, user, logger, botConfig, client) =
         await textToSpeech(greetingMessage, ttsFile, logger);
         logger.info(`TTS audio file created at: ${ttsFile}`);
 
-        if (!fs.existsSync(ttsFile) || fs.statSync(ttsFile).size === 0) {
+        try {
+            const stats = await fsPromises.stat(ttsFile);
+            if (stats.size === 0) {
+                logger.error('TTS file does not exist or is empty.');
+                return;
+            }
+        } catch (err) {
             logger.error('TTS file does not exist or is empty.');
             return;
         }
@@ -66,12 +73,14 @@ const sendWelcomeMessage = async (connection, user, logger, botConfig, client) =
     }
 };
 
-const startRecordingAndTranscription = (connection, user, logger) => {
+const startRecordingAndTranscription = async (connection, user, logger) => {
     const audioDir = path.join(__dirname, '..', 'audio');
     const audioFilePath = path.join(audioDir, `recorded_audio_${user.id}.pcm`);
 
-    if (!fs.existsSync(audioDir)) {
-        fs.mkdirSync(audioDir);
+    try {
+        await fsPromises.access(audioDir);
+    } catch {
+        await fsPromises.mkdir(audioDir, { recursive: true });
     }
 
     const receiver = connection.receiver;
