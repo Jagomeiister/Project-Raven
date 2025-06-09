@@ -3,7 +3,7 @@
 Project Raven is a Discord bot that joins a voice channel when summoned and can generate text-to-speech greetings using ElevenLabs and transcribe voice input using Google Cloud Speech. It relies on OpenAI for additional responses and maintains logs via Winston.
 
 ## Environment Variables
-Create a `.env` file in the project root with the following variables:
+Copy `.env.example` to `.env` in the project root and fill in your values for the following variables:
 
 - `DISCORD_BOT_TOKEN` – Discord bot token used to authenticate with Discord.
 - `HELP_TICKET_CHANNEL_ID` – Channel ID the bot watches for help ticket requests.
