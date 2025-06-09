@@ -18,6 +18,7 @@ Copy `.env.example` to `.env` in the project root and fill in your values for th
    ```bash
    npm install
    ```
+**Note:** ffmpeg must be installed and available in your system PATH.
 
 ## Running the Bot
 After creating the `.env` file and installing dependencies, start the bot with:
