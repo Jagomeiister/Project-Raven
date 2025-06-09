@@ -1,5 +1,4 @@
 const { Client, GatewayIntentBits } = require('discord.js');
-const { config } = require('dotenv');
 const winston = require('winston');
 const path = require('path');
 const fs = require('fs/promises');
