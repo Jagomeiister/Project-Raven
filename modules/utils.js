@@ -20,13 +20,14 @@ const loadBannedWords = async (filePath) => {
 
 const splitResponse = (response, max_length = 200) => {
     const parts = [];
+    response = response.trim();
     while (response.length > max_length) {
         let split_at = response.lastIndexOf(' ', max_length);
         if (split_at === -1) split_at = max_length;
-        parts.push(response.substring(0, split_at));
+        parts.push(response.substring(0, split_at).trim());
         response = response.substring(split_at).trim();
     }
-    parts.push(response);
+    if (response.length > 0) parts.push(response.trim());
     return parts;
 };
 

@@ -40,6 +40,11 @@ describe('splitResponse', () => {
     expect(parts).toEqual(['hello world']);
   });
 
+  test('trims trailing spaces in input', () => {
+    const parts = splitResponse('hello world   ', 20);
+    expect(parts).toEqual(['hello world']);
+  });
+
   test('splits long string at spaces', () => {
     const text = 'The quick brown fox jumps over the lazy dog';
     const parts = splitResponse(text, 10);
