@@ -2,9 +2,19 @@ const fs = require('fs/promises');
 const { SpeechClient } = require('@google-cloud/speech');
 const winston = require('winston');
 
+const defaultLogger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'transcription-service' },
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'bot.log' })
+    ]
+});
+
 const speechClient = new SpeechClient();
 
-const transcribeAudio = async (audioFilePath) => {
+const transcribeAudio = async (audioFilePath, logger = defaultLogger) => {
     try {
         const file = await fs.readFile(audioFilePath);
         const audioBytes = file.toString('base64');
@@ -32,7 +42,7 @@ const transcribeAudio = async (audioFilePath) => {
 
         return transcription;
     } catch (error) {
-        winston.error(`Error in transcribeAudio: ${error}`);
+        logger.error(`Error in transcribeAudio: ${error}`);
         return null;
     }
 };
