@@ -5,8 +5,7 @@ const path = require('path');
 const fs = require('fs/promises');
 const botConfig = require('./config.json');
 
-// Load environment variables
-config({ path: path.resolve(__dirname, '.env') });
+// Environment variables are loaded in index.js
 
 // Environment variables
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
