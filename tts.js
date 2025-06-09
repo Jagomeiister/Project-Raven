@@ -29,18 +29,18 @@ const textToSpeech = async (text, filename = 'tts.mp3', logger = defaultLogger) 
             const stats = await fs.stat(filename);
             logger.info(`TTS file size: ${stats.size} bytes`);
             if (stats.size === 0) {
-                winston.error('TTS file is empty.');
+                logger.error('TTS file is empty.');
             } else {
                 logger.info('TTS file created successfully.');
             }
         } else {
-            winston.error(`Request failed with status code: ${response.status}`);
-            winston.error(`Response data: ${JSON.stringify(response.data)}`);
+            logger.error(`Request failed with status code: ${response.status}`);
+            logger.error(`Response data: ${JSON.stringify(response.data)}`);
         }
     } catch (error) {
-        winston.error(`Error in textToSpeech: ${error}`);
+        logger.error(`Error in textToSpeech: ${error}`);
         if (error.response) {
-            winston.error(`Response data: ${JSON.stringify(error.response.data)}`);
+            logger.error(`Response data: ${JSON.stringify(error.response.data)}`);
         }
     }
 };

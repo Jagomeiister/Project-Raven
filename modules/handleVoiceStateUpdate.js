@@ -103,7 +103,7 @@ const startRecordingAndTranscription = async (connection, user, logger) => {
             .save(wavFilePath)
             .on('end', async () => {
                 logger.info(`Saved WAV file: ${wavFilePath}`);
-                const transcription = await transcribeAudio(wavFilePath);
+                const transcription = await transcribeAudio(wavFilePath, logger);
                 if (transcription) {
                     logger.info(`Transcription: ${transcription}`);
                 } else {
