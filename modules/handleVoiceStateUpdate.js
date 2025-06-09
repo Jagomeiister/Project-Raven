@@ -109,6 +109,18 @@ const startRecordingAndTranscription = async (connection, user, logger) => {
                 } else {
                     logger.error('Failed to transcribe audio.');
                 }
+
+                try {
+                    await fsPromises.unlink(audioFilePath);
+                } catch (err) {
+                    logger.warn(`Failed to delete ${audioFilePath}: ${err.message}`);
+                }
+
+                try {
+                    await fsPromises.unlink(wavFilePath);
+                } catch (err) {
+                    logger.warn(`Failed to delete ${wavFilePath}: ${err.message}`);
+                }
             });
     });
 };
