@@ -2,7 +2,7 @@ const { joinVoiceChannel, VoiceConnectionStatus } = require('@discordjs/voice');
 
 module.exports = (client, logger) => async (message) => {
     if (message.mentions.has(client.user)) {
-        if (message.member.voice.channel) {
+        if (message.member?.voice.channel) {
             const connection = joinVoiceChannel({
                 channelId: message.member.voice.channel.id,
                 guildId: message.member.voice.channel.guild.id,
