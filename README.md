@@ -13,7 +13,7 @@ Copy `.env.example` to `.env` in the project root and fill in your values for th
 - `GOOGLE_APPLICATION_CREDENTIALS` – Path to the Google Cloud service account JSON file used for speech transcription.
 
 ## Installation
-1. Install [Node.js](https://nodejs.org/) (version 18 or newer recommended).
+1. Install [Node.js](https://nodejs.org/) (version 20 or newer recommended).
 2. Install the project dependencies:
    ```bash
    npm install
